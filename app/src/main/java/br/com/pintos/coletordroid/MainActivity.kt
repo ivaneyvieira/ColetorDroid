@@ -2,6 +2,7 @@ package br.com.pintos.coletordroid
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -15,6 +16,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.widget.ArrayAdapter
+import android.widget.Toast
 
 
 class MainActivity : AppCompatActivity() {
@@ -53,6 +55,12 @@ class MainActivity : AppCompatActivity() {
         })
         true
       } else false
+    }
+
+    cardInventario.setOnClickListener {
+      showConfirma("Fecha o inventário?") {
+        println("O inventário não pode ser fechado")
+      }
     }
   }
 
@@ -101,6 +109,16 @@ class MainActivity : AppCompatActivity() {
     builder.setMessage(msg)
     builder.create()
         .show()
+  }
+
+  fun showConfirma(msg: String, execConfirma: () -> Unit) {
+    AlertDialog.Builder(this)
+        .setMessage(msg)
+        .setNegativeButton("Não") { dialogInterface, i -> }
+        .setPositiveButton("Sim") { dialogInterface, i -> execConfirma()}
+        .create()
+        .show()
+
   }
 
 }
