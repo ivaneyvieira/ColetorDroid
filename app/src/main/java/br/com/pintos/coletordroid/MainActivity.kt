@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+    title = "Coleta de Inventário"
 
     val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1)
     listView.adapter = adapter
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         call.enqueue(object : Callback<Result?> {
           override fun onFailure(call: Call<Result?>?, t: Throwable?) {
             Log.e("onFailure error", t?.message)
+            t?.let { showErro("Erro de conexão: ${t.message}") }
           }
 
           override fun onResponse(call: Call<Result?>, response: Response<Result?>?) {
@@ -57,9 +59,39 @@ class MainActivity : AppCompatActivity() {
       } else false
     }
 
-    cardInventario.setOnClickListener {
-      showConfirma("Fecha o inventário?") {
-        println("O inventário não pode ser fechado")
+    cardLote.setOnClickListener {
+      showConfirma("Fecha o Lote?") {
+        service.fechaLote(idSession).enqueue(object : Callback<Result?> {
+          override fun onFailure(call: Call<Result?>?, t: Throwable?) {
+            Log.e("onFailure error", t?.message)
+            t?.let { showErro("Erro de conexão: ${t.message}") }
+          }
+
+          override fun onResponse(call: Call<Result?>, response: Response<Result?>?) {
+            response?.body()
+                ?.let { result ->
+                  updateView(result)
+                }
+          }
+        })
+      }
+    }
+
+    cardUsuario.setOnClickListener {
+      showConfirma("Fecha o usuário?") {
+        service.fechaUsuario(idSession).enqueue(object : Callback<Result?> {
+          override fun onFailure(call: Call<Result?>?, t: Throwable?) {
+            Log.e("onFailure error", t?.message)
+            t?.let { showErro("Erro de conexão: ${t.message}") }
+          }
+
+          override fun onResponse(call: Call<Result?>, response: Response<Result?>?) {
+            response?.body()
+                ?.let { result ->
+                  updateView(result)
+                }
+          }
+        })
       }
     }
   }
@@ -71,6 +103,7 @@ class MainActivity : AppCompatActivity() {
     call.enqueue(object : Callback<Result?> {
       override fun onFailure(call: Call<Result?>?, t: Throwable?) {
         Log.e("onFailure error", t?.message)
+        t?.let { showErro("Erro de conexão: ${t.message}") }
       }
 
       override fun onResponse(call: Call<Result?>, response: Response<Result?>?) {
@@ -118,7 +151,6 @@ class MainActivity : AppCompatActivity() {
         .setPositiveButton("Sim") { dialogInterface, i -> execConfirma()}
         .create()
         .show()
-
   }
 
 }

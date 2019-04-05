@@ -10,6 +10,12 @@ interface ColetorService {
 
   @GET("coletor/leitura/{value}/{id}")
   fun processaLeitura(@Path("value") value: String, @Path("id") id : String): Call<Result>
+
+  @GET("coletor/fecha_lote/{id}")
+  fun fechaLote(@Path("id") id: String): Call<Result>
+
+  @GET("coletor/fecha_usuario/{id}")
+  fun fechaUsuario(@Path("id") id: String): Call<Result>
 }
 
 data class Result(val id: String?, val viewModel: ColetorVO, val messages: Messages)
