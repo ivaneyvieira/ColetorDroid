@@ -14,7 +14,7 @@ class RetrofitInitializer {
       .build()
 
   val retrofit = Retrofit.Builder()
-      .baseUrl("http://10.1.10.100:8090/")
+      .baseUrl("http://10.1.10.244:8090/")
       .addConverterFactory(GsonConverterFactory.create())
       .validateEagerly(true)
       .client(okHttpClient)
